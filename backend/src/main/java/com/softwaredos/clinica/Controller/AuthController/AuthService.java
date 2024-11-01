@@ -107,7 +107,7 @@ public class AuthService {
                                         postData.put("password",user.getPassword());
                                         postData.put("url",request.getUrl());
 
-                                        restTemplate.postForObject(ApiExternal.urlAIRegisterUser, postData, String.class);
+                                        //restTemplate.postForObject(ApiExternal.urlAIRegisterUser, postData, String.class);
                                 } catch (Exception e) {
                                         System.out.println("ERROR CONSUMIR IA MOVIL RECONOCIMIENTO: " + e.getMessage());
                                 }
