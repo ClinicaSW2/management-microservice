@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { graphQLClient, setGraphQLClientHeaders } from '@/services/graphql';
-import { gql } from "graphql-request";
+import { gql } from 'graphql-request';
 import { useSession } from 'next-auth/react';
 
 export default function CrearActualizarUsuario() {
@@ -11,22 +11,26 @@ export default function CrearActualizarUsuario() {
   const { data: sessionData, status } = useSession();
   const [token, setToken] = useState('');
   const [initialData, setInitialData] = useState(null);
-  const searchParams = useSearchParams()
- 
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth/signin");
+    // Redirigir si no está autenticado
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin');
     }
-    if (status === "authenticated") {
+
+    // Configurar el token cuando esté autenticado
+    if (status === 'authenticated') {
       setToken(sessionData.accessToken);
     }
-    const data = localStorage.getItem('doctorData');
-    if (data) {
-      setInitialData(JSON.parse(data));
-      localStorage.removeItem('doctorData');
+
+    // Obtener los datos del doctor desde localStorage solo en el cliente
+    if (typeof window !== 'undefined') {
+      const data = localStorage.getItem('doctorData');
+      if (data) {
+        setInitialData(JSON.parse(data));
+        localStorage.removeItem('doctorData');
+      }
     }
-    console.log(data)
   }, [status]);
 
   const [formData, setFormData] = useState({
@@ -63,7 +67,7 @@ export default function CrearActualizarUsuario() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value
     }));
@@ -79,16 +83,10 @@ export default function CrearActualizarUsuario() {
     });
 
     try {
-      const data = await graphQLClient.request(mutation, variables);
-      console.log(data);
-
-      router.push("/home/manage-doctor");
+      await graphQLClient.request(mutation, variables);
+      router.push('/home/manage-doctor');
     } catch (error) {
-      if (error.request) {
-        console.log(error);
-      } else {
-        console.log("Ups", error);
-      }
+      console.error('Error al actualizar el doctor:', error);
     }
   };
 

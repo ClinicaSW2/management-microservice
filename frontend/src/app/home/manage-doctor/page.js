@@ -1,11 +1,10 @@
-// pages/usuarios/index.js
-'use client'
+'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { graphQLClient, setGraphQLClientHeaders } from '@/services/graphql';
-import { gql } from "graphql-request"
+import { gql } from "graphql-request";
 import ConfirmModal from '@/components/confirm-modal';
 
 export default function UsuariosIndex() {
@@ -29,7 +28,7 @@ export default function UsuariosIndex() {
     try {
       setGraphQLClientHeaders({
         authorization: `Bearer ${token}`,
-      })
+      });
 
       const query = `
       query ListarUsuario {
@@ -52,17 +51,12 @@ export default function UsuariosIndex() {
       }
     `;
 
-      const data = await graphQLClient.request(query);
-      const response = data?.listarUsuario
-      setUsuarios(response); // Establece los usuarios en el estado
+      const response = await graphQLClient.request(query);
+      setUsuarios(response?.listarUsuario);
     } catch (error) {
-      if (error.response) {
-        if (error.response.errors && error.response.errors[0] && error.response.errors[0].message) {
-          if (error.response.errors[0].message === "Unauthorized") {
-            signOut();
-            router.push('/auth/signin')
-          }
-        }
+      if (error.response?.errors[0]?.message === "Unauthorized") {
+        signOut();
+        router.push('/auth/signin');
       }
     }
   };
@@ -72,22 +66,18 @@ export default function UsuariosIndex() {
   };
 
   const handleActualizarUsuario = (doctorData) => {
-    localStorage.setItem('doctorData', JSON.stringify(doctorData));
-    router.push(`/home/manage-doctor/edit`);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('doctorData', JSON.stringify(doctorData));
+      router.push(`/home/manage-doctor/edit`);
+    }
   };
 
   const handleEliminarUsuario = (id) => {
     setUserFix(id);
-    showModal();
+    setModalVisibility(true);
   };
 
-  const showModal = (newValue = true) => {
-    setModalVisibility(newValue)
-  };
-
-  const onCancel = () => {
-    showModal(false);
-  }
+  const onCancel = () => setModalVisibility(false);
 
   const onConfirm = async () => {
     const queryDelete = gql`
@@ -95,22 +85,20 @@ export default function UsuariosIndex() {
       deleteDoctor(id: "${userFix}")
     }`;
     try {
-      console.log(userFix)
-      const data = await graphQLClient.request(queryDelete);
-      console.log(data)
-      showModal(false);
+      await graphQLClient.request(queryDelete);
+      setModalVisibility(false);
       setRefreshPage(!refreshPage);
-    } catch(error) {
-      console.log(error)
-      showModal(false);
+    } catch (error) {
+      console.error(error);
+      setModalVisibility(false);
     }
-  }
+  };
 
   return (
     <div className="container">
       <h1>Lista de Usuarios</h1>
       <button className="btn btn-primary mb-3" onClick={handleCrearUsuario}>Crear Usuario</button>
-      {modalVisibility && <ConfirmModal onConfirm={onConfirm} onCancel={onCancel}></ConfirmModal>}
+      {modalVisibility && <ConfirmModal onConfirm={onConfirm} onCancel={onCancel} />}
       <table className="table">
         <thead>
           <tr>
@@ -144,4 +132,4 @@ export default function UsuariosIndex() {
       </table>
     </div>
   );
-} 
+}

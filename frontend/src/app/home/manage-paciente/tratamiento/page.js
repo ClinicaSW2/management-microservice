@@ -8,18 +8,26 @@ import { useSession } from 'next-auth/react';
 
 export default function TratamientosPaciente() {
   const router = useRouter();
-  const id = localStorage.getItem("tratPaciente")
   const { data: session, status } = useSession();
+  const [pacienteID, setPacienteID] = useState(null); // Estado para el ID del paciente
   const [tratamientos, setTratamientos] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Cargar pacienteID desde localStorage en el cliente
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const id = localStorage.getItem('tratPaciente');
+      setPacienteID(id);
+    }
+  }, []);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin');
-    } else if (status === 'authenticated') {
+    } else if (status === 'authenticated' && pacienteID) {
       fetchTratamientos(session.accessToken);
     }
-  }, [status]);
+  }, [status, pacienteID]);
 
   const fetchTratamientos = async (token) => {
     setGraphQLClientHeaders({

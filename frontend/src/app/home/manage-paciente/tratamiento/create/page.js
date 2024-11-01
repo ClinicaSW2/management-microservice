@@ -8,8 +8,8 @@ import { useSession } from 'next-auth/react';
 
 export default function CrearTratamiento() {
   const router = useRouter();
-  const id = localStorage.getItem("tratPaciente")
   const { data: session, status } = useSession();
+  const [pacienteID, setPacienteID] = useState(null); // Estado para almacenar el ID del paciente
   const [formData, setFormData] = useState({
     detail: '',
     title: '',
@@ -17,9 +17,14 @@ export default function CrearTratamiento() {
   });
   const [loading, setLoading] = useState(false);
 
+  // Cargar el ID del paciente desde localStorage solo en el cliente
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin');
+    }
+    if (typeof window !== 'undefined') {
+      const id = localStorage.getItem("tratPaciente");
+      setPacienteID(id);
     }
   }, [status]);
 
@@ -34,6 +39,12 @@ export default function CrearTratamiento() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    if (!pacienteID) {
+      console.error('El pacienteID no está disponible.');
+      setLoading(false);
+      return;
+    }
 
     const mutation = gql`
     mutation StoreTratamieto {

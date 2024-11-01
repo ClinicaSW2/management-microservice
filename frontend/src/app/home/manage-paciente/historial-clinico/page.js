@@ -8,19 +8,27 @@ import { useSession } from 'next-auth/react';
 
 export default function HistorialMedico() {
   const router = useRouter();
-  const id = localStorage.getItem('pacienteID');
   const { data: session, status } = useSession();
+  const [pacienteID, setPacienteID] = useState(null); // Estado para el ID del paciente
   const [historial, setHistorial] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatePage, setUpdatePage] = useState(true);
 
+  // Cargar pacienteID desde localStorage en el cliente
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const id = localStorage.getItem('pacienteID');
+      setPacienteID(id);
+    }
+  }, []);
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin');
-    } else if (status === 'authenticated') {
+    } else if (status === 'authenticated' && pacienteID) {
       fetchHistorial();
     }
-  }, [status, updatePage]);
+  }, [status, updatePage, pacienteID]);
 
   const fetchHistorial = async () => {
     const query = gql`

@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # Aquí puedes agregar variables de entorno para tu backend si es necesario
+      SPRING_PROFILES_ACTIVE: production
+    restart: always  # Mantener siempre activo
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # Agrega variables de entorno si tu frontend requiere alguna
+      NEXT_PUBLIC_API_URL: "http://localhost:8080"  # URL del backend
+    restart: always  # Mantener siempre activo

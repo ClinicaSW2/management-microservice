@@ -8,8 +8,8 @@ import { useSession } from 'next-auth/react';
 
 export default function CrearDetalleHistoria() {
   const router = useRouter();
-  const id = localStorage.getItem("pacienteID");
   const { data: session, status } = useSession();
+  const [pacienteID, setPacienteID] = useState(null); // Estado para almacenar el ID del paciente
   const [formData, setFormData] = useState({
     title: '',
     notes: ''
@@ -18,6 +18,11 @@ export default function CrearDetalleHistoria() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/signin');
+    }
+    if (typeof window !== 'undefined') {
+      // Solo en el cliente, obtenemos el pacienteID de localStorage
+      const id = localStorage.getItem("pacienteID");
+      setPacienteID(id);
     }
   }, [status]);
 
@@ -31,6 +36,8 @@ export default function CrearDetalleHistoria() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!pacienteID) return; // Asegura que pacienteID esté disponible antes de ejecutar la mutación
+
     const mutation = gql`
     mutation Store_StoryDetail {
         store_StoryDetail(
