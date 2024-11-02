@@ -63,7 +63,7 @@ public class TreatentController {
                 postData.put("title", treatment.getTitle());
                 postData.put("recipe", treatment.getRecipe());
 
-                // restTemplate.postForObject(ApiExternal.urlStoreTreatment, postData, String.class);
+                restTemplate.postForObject(ApiExternal.urlStoreTreatment, postData, String.class);
             } catch (Exception e) {
                 LOGGER.info("Error: ", e);
             }
