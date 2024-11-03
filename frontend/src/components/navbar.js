@@ -9,57 +9,39 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-dark bg-dark">
       <div className="container">
-        <Link
-          href="/"
-          className="btn btn-primary btn-sm"
-        >
+        <Link href="/" className="btn btn-primary btn-sm">
           Inicio
         </Link>
         {data?.accessToken ? (
           <>
-            <Link
-              href="/home"
-              className="btn btn-primary btn-sm"
-            >
+            <Link href="/home" className="btn btn-primary btn-sm">
               Pagina Principal
             </Link>
-            <Link
-              href="/home/manage-doctor"
-              className="btn btn-primary btn-sm"
-            >
+            <Link href="/home/manage-doctor" className="btn btn-primary btn-sm">
               Administrar doctores
             </Link>
-            <Link
-              href="/home/bussines"
-              className="btn btn-primary btn-sm"
-            >
+            <Link href="/home/bussines" className="btn btn-primary btn-sm">
               Ver Datos Bussines intelligence
             </Link>
-            <Link
-              href="/home/horario"
-              className="btn btn-primary btn-sm"
-            >
+            <Link href="/home/horario" className="btn btn-primary btn-sm">
               Mis Horarios
             </Link>
-            <Link
-              href="/home/reserva"
-              className="btn btn-primary btn-sm"
-            >
+            <Link href="/home/reserva" className="btn btn-primary btn-sm">
               Mis Reservas
             </Link>
-            <button
-              onClick={() => signOut()}
-              className="btn btn-danger btn-sm"
+            <Link
+              href="/home/ia-recognition"
+              className="btn btn-primary btn-sm"
             >
+              Reconocimiento IA
+            </Link>
+            <button onClick={() => signOut()} className="btn btn-danger btn-sm">
               Cerrar sesion
             </button>
           </>
         ) : (
           <>
-            <Link
-              href="/auth/signin"
-              className="btn btn-primary btn-sm"
-            >
+            <Link href="/auth/signin" className="btn btn-primary btn-sm">
               Login
             </Link>
           </>
