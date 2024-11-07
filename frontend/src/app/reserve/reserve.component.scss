@@ -1,0 +1,87 @@
+/* General container styling */
+.container {
+  background-color: #fafafa;
+  color: #1a237e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling */
+h1 {
+  color: #1a237e;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Loading spinner styling */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 20px;
+  color: #3949ab;
+}
+
+/* Table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #e8eaf6;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #c5cae9;
+}
+
+th {
+  background-color: #1a237e;
+  color: #ffeb3b;
+}
+
+td {
+  color: #3949ab;
+}
+
+/* Button styling */
+button {
+  margin: 4px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #5c6bc0;
+}
+
+/* Button specific styles */
+.btn-info {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.btn-info:hover {
+  background-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #d9534f;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: #c9302c;
+}
+
+/* Additional button margin */
+.ml-2 {
+  margin-left: 8px;
+}

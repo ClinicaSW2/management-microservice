@@ -1,0 +1,82 @@
+.sidenav-container {
+  height: 100vh;
+  background-color: #f0f2f5;
+  overflow: hidden;
+}
+
+.sidenav {
+  width: 280px;
+  background-color: #1a237e; /* Dark indigo */
+  color: #e8eaf6; /* Light grey for text contrast */
+  display: flex;
+  padding: 24px 16px;
+  flex-direction: column;
+  padding-top: 16px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+}
+
+.welcome {
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffeb3b; /* Bright yellow for welcome text */
+  text-align: center;
+}
+
+mat-divider {
+  width: 80%;
+  margin: 20px 0;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+mat-nav-list {
+  width: 100%;
+  padding-top: 8px;
+}
+
+mat-nav-list a,
+mat-nav-list button {
+  color: #c5cae9; /* Softer light blue for items */
+  padding: 12px 20px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  transition: background-color 0.3s, color 0.3s;
+  margin-bottom: 8px;
+}
+
+mat-nav-list a:hover,
+mat-nav-list button:hover {
+  background-color: #3949ab;
+  color: #e8eaf6;
+}
+
+mat-icon {
+  margin-right: 12px;
+  font-size: 22px;
+  color: #ffeb3b; /* Yellow icons for emphasis */
+}
+
+.active-link {
+  background-color: #5c6bc0;
+  color: #ffffff;
+  font-weight: bold;
+  border-left: 4px solid #ffeb3b;
+}
+
+.sidenav-content {
+  margin-left: 280px;
+  padding: 24px;
+  background-color: #fafafa;
+  overflow-y: auto;
+}
+
+span {
+  color: #ffffff;
+  font-weight: bold;
+}

@@ -1,0 +1,19 @@
+<!-- home.component.hyml -->
+<mat-card class="home-card">
+  <div class="mb-4">
+    <div class="line-chart-container">
+      <!-- Vincula el evento specialtySelected al método onEspecialidadSelected -->
+      <app-select-especialidad (specialtySelected)="onEspecialidadSelected($event)"></app-select-especialidad>
+
+      <!-- Pasa selectedEspecialidad a LineChartComponent -->
+      <app-line-chart [especialidad]="selectedEspecialidad"></app-line-chart>
+    </div>
+
+    <!-- Grafica Vertical Char -->
+    <app-vertical-bar-chart></app-vertical-bar-chart>
+
+    <!-- Grafica de Porsentage VS -->
+    <app-porsentage-chart></app-porsentage-chart>
+  </div>
+</mat-card>
+

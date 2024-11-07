@@ -1,0 +1,30 @@
+<div class="drag-drop-container" (dragover)="handleDragOver($event)" (drop)="handleDrop($event)">
+  <h1>Upload an Image for Prediction</h1>
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando imagen...</p>
+  </div>
+
+  <div class="drop-zone">
+    <ng-container *ngIf="selectedImage; else placeholder">
+      <img [src]="selectedImage" alt="Selected" class="preview-image" />
+    </ng-container>
+    <ng-template #placeholder>
+      <p>Drag and drop an image here, or click to select</p>
+    </ng-template>
+    <input type="file" accept="image/*" (change)="handleFileChange($event)" />
+  </div>
+
+  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+  <div *ngIf="predictedLabels.length > 0" class="results">
+    <h2>Prediction Results</h2>
+    <ul>
+      <li *ngFor="let label of predictedLabels; index as i">
+        {{ label }}: {{ confidenceScores[i] }}
+      </li>
+    </ul>
+  </div>
+</div>

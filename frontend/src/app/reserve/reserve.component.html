@@ -1,0 +1,34 @@
+<div class="container">
+  <h1>Reservas</h1>
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando Reservas...</p>
+  </div>
+
+  <!-- User table, visible only when not loading -->
+  <div *ngIf="!isLoading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Lugar</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reserve of reserves">
+          <td>{{ reserve.place }}</td>
+          <td>{{ reserve.state }}</td>
+          <td>{{ reserve.available_time.date }}</td>
+          <td>
+            <!-- Button "Ver Paciente" -->
+            <button class="btn btn-info" (click)="handleViewPatient(reserve.paciente)">Ver Paciente</button>
+            <!-- Finalizar Reserva -->
+            <button class="btn btn-danger ml-2" (click)="handleFinishReserve(reserve)">Finalizar Reserva</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

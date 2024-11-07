@@ -1,0 +1,55 @@
+<mat-card class="contact-card">
+  <mat-card-title>Contacta con nosotros</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+      <!-- Campo de nombre -->
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" placeholder="Tu nombre">
+        <mat-error *ngIf="contactForm.get('name')?.hasError('required')">Este campo es requerido</mat-error>
+        <mat-error *ngIf="contactForm.get('name')?.hasError('minlength')">Mínimo 3 caracteres</mat-error>
+      </mat-form-field>
+
+      <!-- Campo de correo electrónico -->
+      <mat-form-field appearance="outline">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput formControlName="email" placeholder="correo@ejemplo.com">
+        <mat-error *ngIf="contactForm.get('email')?.hasError('required')">Este campo es requerido</mat-error>
+        <mat-error *ngIf="contactForm.get('email')?.hasError('email')">Correo inválido</mat-error>
+      </mat-form-field>
+
+      <!-- Campo de teléfono -->
+      <mat-form-field appearance="outline">
+        <mat-label>Teléfono</mat-label>
+        <input matInput formControlName="phone" placeholder="Opcional">
+        <mat-error *ngIf="contactForm.get('phone')?.hasError('pattern')">Número no válido</mat-error>
+      </mat-form-field>
+
+      <!-- Campo de tema -->
+      <mat-form-field appearance="outline">
+        <mat-label>Tema</mat-label>
+        <mat-select formControlName="topic">
+          <mat-option value="soporte">Soporte</mat-option>
+          <mat-option value="ventas">Ventas</mat-option>
+          <mat-option value="otros">Otros</mat-option>
+        </mat-select>
+        <mat-error *ngIf="contactForm.get('topic')?.hasError('required')">Este campo es requerido</mat-error>
+      </mat-form-field>
+
+      <!-- Campo de mensaje -->
+      <mat-form-field appearance="outline">
+        <mat-label>Mensaje</mat-label>
+        <textarea matInput formControlName="message" rows="4" placeholder="Tu mensaje"></textarea>
+        <mat-error *ngIf="contactForm.get('message')?.hasError('required')">Este campo es requerido</mat-error>
+        <mat-error *ngIf="contactForm.get('message')?.hasError('minlength')">Mínimo 10 caracteres</mat-error>
+      </mat-form-field>
+
+      <!-- Botón de envío -->
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="contactForm.invalid">
+          Enviar
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,76 @@
+.sidenav-container {
+  height: 100vh;
+  background-color: #e3f2fd;
+}
+
+.sidenav {
+  width: 280px;
+  background-color: #1a237e;
+  color: #ffffff;
+  padding-top: 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  background-color: #3949ab;
+  padding: 0 20px;
+  color: #ffffff;
+}
+
+.app-title {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #ffeb3b;
+  margin-left: 16px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 2px solid #ffffff40;
+}
+
+.username {
+  font-size: 16px;
+  color: #ffeb3b;
+}
+
+.main-content {
+  padding: 24px;
+  background-color: #fafafa;
+  overflow-y: auto;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.active-link {
+  color: #ffeb3b;
+  font-weight: bold;
+  border-left: 4px solid #ffeb3b;
+}
+
+mat-menu {
+  padding: 0;
+}
+
+mat-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+mat-icon {
+  margin-right: 8px;
+}

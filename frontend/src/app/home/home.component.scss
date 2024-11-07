@@ -1,0 +1,23 @@
+.home-card {
+  // margin: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.line-chart-container {
+  // display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 490px;
+  background-color: #f9fafc;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  margin-bottom: 10px;
+}

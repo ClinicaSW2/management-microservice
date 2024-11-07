@@ -1,0 +1,38 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav mode="side" opened class="sidenav">
+    <h2 class="welcome">Bienvenido, {{ user?.name }} {{ user?.lastName }}</h2>
+    <mat-divider></mat-divider>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home" routerLinkActive="active-link">
+        <mat-icon>home</mat-icon>
+        <span>Inicio</span>
+      </a>
+      <a mat-list-item routerLink="/doctor" routerLinkActive="active-link">
+        <mat-icon>person</mat-icon>
+        <span>Doctor</span>
+      </a>
+      <!-- Horarios -->
+      <a mat-list-item routerLink="/timetable" routerLinkActive="active-link">
+        <mat-icon>schedule</mat-icon>
+        <span>Horarios</span>
+      </a>
+      <!-- Reservas -->
+      <a mat-list-item routerLink="/reserve" routerLinkActive="active-link">
+        <mat-icon>event</mat-icon>
+        <span>Reservas</span>
+      </a>
+      <!-- Predecit Enfermedad -->
+      <a mat-list-item routerLink="/drag-drop" routerLinkActive="active-link">
+        <mat-icon>search</mat-icon>
+        <span>Predecir Enfermedad</span>
+      </a>
+      <button mat-list-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar Sesión</span>
+      </button>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="sidenav-content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

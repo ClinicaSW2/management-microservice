@@ -1,0 +1,12 @@
+/* styles.scss */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f0f2f5; /* Light grey for overall contrast */
+}
+
+.sidenav-container {
+  height: 100vh;
+  background-color: #f0f2f5; /* Matches the body color for consistency */
+}
