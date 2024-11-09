@@ -69,7 +69,8 @@
                 <!-- <td>{{ detail.tratamiento }}</td> -->
                 <td>{{ detail.notes }}</td>
                 <td>
-                  <button class="btn btn-danger ml-2" (click)="handleEliminarDetallePaciente(detail.id)">Eliminar</button>
+                  <button class="btn btn-danger ml-2"
+                    (click)="handleEliminarDetallePaciente(detail.id)">Eliminar</button>
                   <!-- Ver Tratamiento -->
                   <button class="btn btn-primary ml-2" (click)="handleVerTratamiento(detail)">Ver Tratamiento</button>
                 </td>
@@ -98,14 +99,31 @@
     <div class="modal-content">
       <h2>{{ modalTitle }}</h2>
       <form (ngSubmit)="handleSubmit()">
+        <!-- Título -->
         <div class="form-group">
           <label for="title">Título</label>
-          <input type="text" class="form-control" id="title" name="title" [(ngModel)]="formData.title" required>
+          <div class="input-group">
+            <input type="text" class="form-control" id="title" name="title" [(ngModel)]="formData.title" required />
+            <button type="button" class="btn btn-secondary"
+              (click)="isListening ? stopListening() : startListening('title')">
+              <mat-icon>{{ isListening && isListeningTitle ? 'mic_off' : 'mic' }}</mat-icon>
+            </button>
+          </div>
         </div>
+
+        <!-- Notas -->
         <div class="form-group">
           <label for="notes">Notas</label>
-          <textarea class="form-control" id="notes" name="notes" [(ngModel)]="formData.notes" required></textarea>
+          <div class="input-group">
+            <textarea class="form-control" id="notes" name="notes" [(ngModel)]="formData.notes" required></textarea>
+            <button type="button" class="btn btn-secondary"
+              (click)="isListening ? stopListening() : startListening('notes')">
+              <mat-icon>{{ isListening && !isListeningTitle ? 'mic_off' : 'mic' }}</mat-icon>
+            </button>
+          </div>
         </div>
+
+        <!-- Botones de Envío y Cancelación -->
         <div class="modal-buttons">
           <button type="submit" class="btn btn-primary">Guardar</button>
           <button type="button" class="btn btn-secondary" (click)="toggleCreateForm()">Cancelar</button>
@@ -113,4 +131,5 @@
       </form>
     </div>
   </div>
+
 </div>
