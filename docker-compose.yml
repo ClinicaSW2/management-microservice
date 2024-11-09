@@ -16,8 +16,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "4200:4200"
     environment:
-      # Agrega variables de entorno si tu frontend requiere alguna
-      NEXT_PUBLIC_API_URL: "http://localhost:8080"  # URL del backend
+      # Cambiar el entorno de la API para Angular
+      API_URL: "http://localhost:8080"  # URL del backend
     restart: always  # Mantener siempre activo
