@@ -3,6 +3,9 @@
   <!-- Añadir Detalle Historial -->
   <button class="btn btn-primary mb-3" (click)="toggleCreateForm()">Añadir Detalle Historial</button>
 
+  <!-- Ver Tratamientos -->
+  <!-- <button class="btn btn-primary mb-3" (click)="toggleTreatment()">Ver Tratamientos</button> -->
+
   <!-- Paciente Data Person -->
   <div class="row">
     <div class="col-md-6">
@@ -14,7 +17,7 @@
           <p><strong>Nombre:</strong> {{ patient?.name }}</p>
           <p><strong>Apellido:</strong> {{ patient?.lastName }}</p>
           <p><strong>CI:</strong> {{ patient?.ci }}</p>
-          <p><strong>Sexo:</strong> {{ patient?.sexo }}</p>
+          <p><strong>Sexo:</strong> {{ patient?.sexo === 'M' ? 'Masculino' : 'Femenino' }}</p>
           <p><strong>Número de Contacto:</strong> {{ patient?.contactNumber }}</p>
           <p><strong>Dirección:</strong> {{ patient?.address }}</p>
           <p><strong>Email:</strong> {{ patient?.user?.email }}</p>
@@ -27,6 +30,18 @@
   <div *ngIf="isLoading" class="loading-container">
     <mat-spinner diameter="40"></mat-spinner>
     <p>Cargando Historial...</p>
+  </div>
+
+  <!-- Deleting detail -->
+  <div *ngIf="isDeleting" class="full-screen-loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Eliminando detalle...</p>
+  </div>
+
+  <!-- Creando Detalle Historial Clinico -->
+  <div *ngIf="isCreating" class="full-screen-loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Creando detalle...</p>
   </div>
 
   <!-- Table Patient Detail -->
@@ -44,6 +59,7 @@
                 <th>Fecha y Hora</th>
                 <!-- <th>Tratamiento</th> -->
                 <th>Notas</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -52,10 +68,27 @@
                 <td>{{ detail.data_time }}</td>
                 <!-- <td>{{ detail.tratamiento }}</td> -->
                 <td>{{ detail.notes }}</td>
+                <td>
+                  <button class="btn btn-danger ml-2" (click)="handleEliminarDetallePaciente(detail.id)">Eliminar</button>
+                  <!-- Ver Tratamiento -->
+                  <button class="btn btn-primary ml-2" (click)="handleVerTratamiento(detail)">Ver Tratamiento</button>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div *ngIf="modalVisibility" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Confirmación de Eliminación</h2>
+      <p>{{ deleteConfirmationMessage }}</p>
+      <div class="modal-buttons">
+        <button class="btn btn-danger" (click)="confirmDelete()">Confirmar</button>
+        <button class="btn btn-secondary" (click)="cancelDelete()">Cancelar</button>
       </div>
     </div>
   </div>

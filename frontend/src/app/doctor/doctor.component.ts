@@ -20,7 +20,6 @@ export class DoctorComponent implements OnInit {
   isDeleting = false;
   modalVisibility = false;
   userFix: string = '';
-  token: string | null = null;
   showForm = false;
   formData: Partial<Person> = {}; // Keeps formData as Partial<Person>
   deleteConfirmationMessage = '¿Estás seguro de que deseas eliminar este usuario?';
@@ -31,30 +30,22 @@ export class DoctorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.token = this.authService.getToken();
-    if (this.token) {
-      this.loadUsuarios();
-    } else {
-      this.authService.logout();
-    }
+    this.loadUsuarios();
   }
 
   loadUsuarios(): void {
-    if (this.token) {
-      this.isLoading = true;
-      this.usuarioService.fetchUsuarios(this.token).subscribe(
-        (usuarios) => {
-          this.usuarios = usuarios;
-          this.isLoading = false;
-        },
-        (error) => {
-          this.isLoading = false;
-          if (error.error.message === 'Unauthorized') {
-            this.authService.logout();
-          }
-        }
-      );
-    }
+    this.isLoading = true;
+    this.usuarioService.fetchUsuarios().then(
+      (usuarios) => {
+        this.usuarios = usuarios;
+        this.isLoading = false;
+      }
+    ).catch((error) => {
+      this.isLoading = false;
+      if (error.error.message === 'Unauthorized') {
+        this.authService.logout();
+      }
+    });
   }
 
   modalTitle: string = 'Crear Usuario';
@@ -68,15 +59,13 @@ export class DoctorComponent implements OnInit {
   async handleSubmit() {
     this.isSubmitting = true;
     try {
-      if (this.token) {
-        if (this.modalTitle === 'Crear Usuario') {
-          await this.usuarioService.saveUser(this.formData, this.token); // Create action
-        } else {
-          await this.usuarioService.updateUsuario(this.formData, this.token); // Update action
-        }
-        this.toggleUserForm(); // Close modal after successful submission
-        await this.loadUsuarios(); // Refresh the user list
+      if (this.modalTitle === 'Crear Usuario') {
+        await this.usuarioService.saveUser(this.formData); // Create action
+      } else {
+        await this.usuarioService.updateUsuario(this.formData); // Update action
       }
+      this.toggleUserForm(); // Close modal after successful save/update
+      this.loadUsuarios(); // Refresh user list
     } catch (error) {
       console.error("Error saving/updating user:", error);
     } finally {
@@ -98,15 +87,13 @@ export class DoctorComponent implements OnInit {
 
   confirmDelete(): void {
     this.isDeleting = true; // Start deleting loader
-    if (this.token) {
-      this.usuarioService.deleteUsuario(this.userFix, this.token).then(() => {
-        this.isDeleting = false; // Stop deleting loader
-        this.modalVisibility = false; // Close confirmation modal
-        this.loadUsuarios(); // Refresh user list
-      }).catch(() => {
-        this.isDeleting = false; // Ensure loader stops on error
-      });
-    }
+    this.usuarioService.deleteUsuario(this.userFix).then(() => {
+      this.isDeleting = false; // Stop deleting loader
+      this.modalVisibility = false; // Close confirmation modal
+      this.loadUsuarios(); // Refresh user list
+    }).catch(() => {
+      this.isDeleting = false; // Ensure loader stops on error
+    });
   }
 
   cancelDelete(): void {

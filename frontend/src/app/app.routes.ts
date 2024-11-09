@@ -7,6 +7,7 @@ import { TimetableComponent } from './timetable/timetable.component';
 import { ReserveComponent } from './reserve/reserve.component';
 import { PatientComponent } from './patient/patient.component';
 import { DragDropComponent } from './drag-drop/drag-drop.component';
+import { TreatmentComponent } from './treatment/treatment.component';
 import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
@@ -18,5 +19,6 @@ export const routes: Routes = [
   { path: 'reserve', component: ReserveComponent, canActivate: [authGuard] },
   { path: 'patient', component: PatientComponent, canActivate: [authGuard] },
   { path: 'drag-drop', component: DragDropComponent, canActivate: [authGuard] },
+  { path: 'treatment', component: TreatmentComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 })
 export class ReserveComponent implements OnInit {
   reserves: Reserve[] = [];
-  token: string | null = null;
+  // token: string | null = null;
 
   isLoading = false;
 
@@ -28,34 +28,49 @@ export class ReserveComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.token = this.authService.getToken();
-    if (this.token) {
-      this.loadReserves();
-      console.log('Reserves:', this.reserves);
-      if (!this.reserves) {
-        this.router.navigate(['/login']);
-      }
-    } else {
-      this.authService.logout();
-      this.router.navigate(['/login']);
-    }
+    // this.token = this.authService.getToken();
+    // if (this.token) {
+    //   this.loadReserves();
+    //   console.log('Reserves:', this.reserves);
+    //   if (!this.reserves) {
+    //     this.router.navigate(['/login']);
+    //   }
+    // } else {
+    //   this.authService.logout();
+    //   this.router.navigate(['/login']);
+    // }
+
+    this.loadReserves();
   }
 
   loadReserves(): void {
-    if (this.token) {
-      this.isLoading = true;
-      this.reserveService.fetchReserves(this.token).subscribe(
-        (reserves) => {
-          console.log("🚀 ~ ReserveComponent ~ loadReserves ~ reserves:", reserves)
-          this.reserves = reserves;
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error loading reserves:', error);
-          this.isLoading = false;
-        }
-      );
-    }
+    // if (this.token) {
+    //   this.isLoading = true;
+    //   this.reserveService.fetchReserves(this.token).subscribe(
+    //     (reserves) => {
+    //       console.log("🚀 ~ ReserveComponent ~ loadReserves ~ reserves:", reserves)
+    //       this.reserves = reserves;
+    //       this.isLoading = false;
+    //     },
+    //     (error) => {
+    //       console.error('Error loading reserves:', error);
+    //       this.isLoading = false;
+    //     }
+    //   );
+    // }
+
+    this.isLoading = true;
+    this.reserveService.fetchReserves().then(
+      (reserves) => {
+        this.reserves = reserves;
+        this.isLoading = false;
+      }
+    ).catch((error) => {
+      this.isLoading = false;
+      if (error.error.message === 'Unauthorized') {
+        this.authService.logout();
+      }
+    });
   }
 
   handleViewPatient(patient: Person): void {

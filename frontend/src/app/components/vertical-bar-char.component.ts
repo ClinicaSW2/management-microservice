@@ -78,7 +78,7 @@ export class VerticalBarChartComponent implements OnInit {
 
   async fetchData(): Promise<void> {
     try {
-      (await this.intelligenceService.getCantidadReservacion()).subscribe((dataString) => {
+      (await this.intelligenceService.getCantidadReservacion()).subscribe((dataString: string) => {
         const data = JSON.parse(dataString);
         const datasets: ChartDataset<'bar'>[] = [];
         const labels = [

@@ -4,6 +4,8 @@ import { gql } from 'graphql-request';
 import { LoginResponse, Person } from '../interfaces/login-response.interface';
 import { isPlatformBrowser } from '@angular/common';
 import { GraphQLService } from '../config/graphql.service';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,47 +16,54 @@ export class AuthService {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private graphqlService: GraphQLService,
+    private router: Router
   ) {}
 
-  async login(email: string, password: string): Promise<void> {
-    const query = gql`
-      mutation Login($email: String!, $password: String!) {
-        login(request: { email: $email, password: $password }) {
-          token
-          message
-          person {
+  // auth.service.ts
+async login(email: string, password: string): Promise<void> {
+  const query = gql`
+    mutation Login($email: String!, $password: String!) {
+      login(request: { email: $email, password: $password }) {
+        token
+        message
+        person {
+          id
+          name
+          lastName
+          address
+          ci
+          sexo
+          contactNumber
+          titulo
+          user {
             id
-            name
-            lastName
-            address
-            ci
-            sexo
-            contactNumber
-            titulo
-            user {
-              id
-              username
-              email
-              role
-            }
+            username
+            email
+            role
           }
         }
       }
-    `;
-
-    const variables = { email, password };
-    const response = await this.graphqlService.request<{ login: { token: string, person: Person } }>(query, variables);
-    const { token, person } = response.login;
-
-    if (token && isPlatformBrowser(this.platformId)) {
-      this.miImage(token);
-      localStorage.setItem('accessToken', token);
-      localStorage.setItem('user', JSON.stringify(person));
-      this.user = person;
-    } else {
-      throw new Error('No token returned');
     }
+  `;
+
+  const variables = { email, password };
+  const response = await this.graphqlService.request<{ login: { token: string, person: Person } }>(query, variables);
+  const { token, person } = response.login;
+
+  if (token && isPlatformBrowser(this.platformId)) {
+    localStorage.setItem('accessToken', token);
+    localStorage.setItem('user', JSON.stringify(person));
+    // rol
+    localStorage.setItem('role', person.user.role);
+    this.user = person;
+
+    // Actualiza el token en el servicio GraphQL
+    this.graphqlService.updateToken(token);
+  } else {
+    throw new Error('No token returned');
   }
+}
+
 
   async miImage(token: string): Promise<void> {
     const query = gql`
@@ -73,7 +82,7 @@ export class AuthService {
     `;
 
     // Configura el token para GraphQLService
-    this.graphqlService.setAuthToken(token);
+    // this.graphqlService.setAuthToken(token);
 
     try {
       const data = await this.graphqlService.request<{ miImage: { id: string, url: string, user: { id: string, username: string, email: string, role: string } }[] }>(query);
@@ -91,11 +100,13 @@ export class AuthService {
 
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
+      console.log('Logging out');
       localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
       localStorage.removeItem('firstImageUrl');
+      localStorage.removeItem('role');
     }
-    this.user = null;
+    this.router.navigate(['/login']);  // Redirige a la página de inicio de sesión
   }
 
   isLoggedIn(): boolean {
@@ -108,6 +119,11 @@ export class AuthService {
       this.user = savedUser ? JSON.parse(savedUser) : null;
     }
     return this.user;
+  }
+
+  // get role
+  getRole(): string | null {
+    return isPlatformBrowser(this.platformId) ? localStorage.getItem('role') : null;
   }
 
   getToken(): string | null {

@@ -1,0 +1,27 @@
+<div class="container">
+  <!-- <h1>Tratamientos</h1> -->
+
+  <!-- Botón para añadir tratamiento -->
+  <!-- <button class="btn btn-primary mb-3" (click)="toggleCreateForm()">Añadir Tratamiento</button> -->
+
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando tratamiento...</p>
+  </div>
+
+  <!-- Tabla de Tratamientos -->
+  <div *ngIf="!isLoading" class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          Datos del tratamiento
+        </div>
+        <div class="card-body">
+          <p>{{ treatment?.title }}</p>
+          <p>{{ treatment?.detail }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

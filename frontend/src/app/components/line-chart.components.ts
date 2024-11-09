@@ -68,7 +68,7 @@ export class LineChartComponent implements OnChanges {
 
   async fetchData(): Promise<void> {
     this.isLoading = true;
-    (await this.intelligenceService.getIngresoByEspecialidad(this.especialidad)).subscribe((dataString) => {
+    (await this.intelligenceService.getIngresoByEspecialidad(this.especialidad)).subscribe((dataString: string) => {
       const data = JSON.parse(dataString);
       const chartData = this.formatChartData(data);
       this.renderChart(chartData);

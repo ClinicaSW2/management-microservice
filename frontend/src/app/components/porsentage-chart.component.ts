@@ -75,7 +75,7 @@ export class PorsentageChartComponent implements OnInit {
 
   async fetchGeneralData() {
     try {
-      (await this.intelligenceService.getPromedioAtencion()).subscribe((dataResponse) => {
+      (await this.intelligenceService.getPromedioAtencion()).subscribe((dataResponse: string) => {
         const data = JSON.parse(dataResponse);
         const labels = data.map((item: any) => item.especialidad);
         const dataValues = data.map((item: any) => item.tiempo_atencion);
@@ -98,7 +98,7 @@ export class PorsentageChartComponent implements OnInit {
 
   async fetchMaleData() {
     try {
-      (await this.intelligenceService.getPromedioAtencionM()).subscribe((dataResponse) => {
+      (await this.intelligenceService.getPromedioAtencionM()).subscribe((dataResponse: string) => {
         const data = JSON.parse(dataResponse);
         const dataValues = data.map((item: any) => item.tiempo_atencion);
         const backgroundColors = dataValues.map(() => this.getRandomColor());
@@ -119,7 +119,7 @@ export class PorsentageChartComponent implements OnInit {
 
   async fetchFemaleData() {
     try {
-      (await this.intelligenceService.getPromedioAtencionF()).subscribe((dataResponse) => {
+      (await this.intelligenceService.getPromedioAtencionF()).subscribe((dataResponse: string) => {
         const data = JSON.parse(dataResponse);
         const dataValues = data.map((item: any) => item.tiempo_atencion);
         const backgroundColors = dataValues.map(() => this.getRandomColor());

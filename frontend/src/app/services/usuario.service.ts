@@ -1,25 +1,23 @@
 // usuario.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Person } from '../interfaces/login-response.interface';
-import { GraphQLClient, gql } from 'graphql-request';
-import { lastValueFrom } from 'rxjs';
+import { gql } from 'graphql-request';
+import { GraphQLService } from '../config/graphql.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsuarioService {
-  private endpoint = 'http://143.198.138.115:8080/graphql';
+  // private endpoint = 'http://143.198.138.115:8080/graphql';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private graphqlService: GraphQLService,
+  ) { }
 
-  fetchUsuarios(token: string): Observable<Person[]> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  async fetchUsuarios(): Promise<Person[]> {
     const query = `query ListarUsuario { listarUsuario { id, name, lastName, address, ci, sexo, contactNumber, titulo, user { id, username, email, role } } }`;
 
-    return this.http
+    /* return this.http
       .post<any>(this.endpoint, { query }, { headers })
       .pipe(
         map(response => response.data.listarUsuario.map((item: any) => ({
@@ -38,16 +36,23 @@ export class UsuarioService {
             role: item.user.role
           }
         })))
-      );
+      ); */
+
+    // Configura el token para GraphQLService
+    // this.graphqlService.setAuthToken(token);
+
+    // Realiza la solicitud
+    const response = await this.graphqlService.request<{ listarUsuario: Person[] }>(query);
+    return response.listarUsuario;
   }
 
-  private getClient(): GraphQLClient {
-    return new GraphQLClient(this.endpoint);
-  }
+  // private getClient(): GraphQLClient {
+  //   return new GraphQLClient(this.endpoint);
+  // }
 
-  async saveUser(user: Partial<Person>, token: string): Promise<void> {
-    const client = this.getClient();
-    client.setHeader('Authorization', `Bearer ${token}`);
+  async saveUser(user: Partial<Person>): Promise<void> {
+    /* const client = this.getClient();
+    client.setHeader('Authorization', `Bearer ${token}`); */
     const mutation = gql`
       mutation StoreDoctor {
         storeDoctor(request: {
@@ -66,22 +71,27 @@ export class UsuarioService {
       }
     `;
 
-    try {
+    /* try {
       const response = await client.request(mutation);
       console.log('User created/updated successfully:', response);
     } catch (error) {
       console.error('Error creating/updating user:', error);
-    }
+    } */
+
+    // Configura el token para GraphQLService
+    // this.graphqlService.setAuthToken(token);
+
+    // Realiza la solicitud
+    await this.graphqlService.request<{ storeDoctor: string }>(mutation);
   }
 
-  async updateUsuario(user: Partial<Person>, token: string): Promise<void> {
-    const client = this.getClient();
-    client.setHeader('Authorization', `Bearer ${token}`);
+  async updateUsuario(user: Partial<Person>): Promise<void> {
+    /* const client = this.getClient();
+    client.setHeader('Authorization', `Bearer ${token}`); */
     const mutation = gql`
       mutation UpdateDoctor {
         updateDoctor(id: "${user.id}", request: {
           email: "${user.user?.email}",
-          password: "defaultPassword",
           name: "${user.name}",
           last_name: "${user.lastName}",
           address: "${user.address}",
@@ -95,15 +105,21 @@ export class UsuarioService {
       }
     `;
 
-    try {
+    /* try {
       const response = await client.request(mutation);
       console.log('User updated successfully:', response);
     } catch (error) {
       console.error('Error updating user:', error);
-    }
+    } */
+
+    // Configura el token para GraphQLService
+    // this.graphqlService.setAuthToken(token);
+
+    // Realiza la solicitud
+    await this.graphqlService.request<{ updateDoctor: string }>(mutation);
   }
 
-  async deleteUsuario(id: string, token: string): Promise<void> {
+  async deleteUsuario(id: string): Promise<void> {
     /* const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const mutation = `mutation DeleteDoctor { deleteDoctor(id: "${id}") }`;
     try {
@@ -112,14 +128,20 @@ export class UsuarioService {
       console.error('Error deleting user:', error);
       return of(null);
     } */
-    const client = this.getClient();
-    client.setHeader('Authorization', `Bearer ${token}`);
+    /* const client = this.getClient();
+    client.setHeader('Authorization', `Bearer ${token}`); */
     const mutation = gql`mutation DeleteDoctor { deleteDoctor(id: "${id}") }`;
-    try {
+    /* try {
       const response = await client.request(mutation);
       console.log('User deleted successfully:', response);
     } catch (error) {
       console.error('Error deleting user:', error);
-    }
+    } */
+
+    // Configura el token para GraphQLService
+    // this.graphqlService.setAuthToken(token);
+
+    // Realiza la solicitud
+    await this.graphqlService.request<{ deleteDoctor: string }>(mutation);
   }
 }

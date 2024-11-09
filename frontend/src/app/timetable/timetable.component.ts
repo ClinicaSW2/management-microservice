@@ -24,7 +24,7 @@ export class TimetableComponent implements OnInit {
   formData: Partial<Timetable> = {};
   deleteConfirmationMessage = '¿Estás seguro de que deseas eliminar este horario?';
   modalTitle: string = 'Crear Horario';
-  token: string | null = null;
+  // token: string | null = null;
 
   constructor(
     private timetableService: TimetableService,
@@ -32,28 +32,43 @@ export class TimetableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.token = this.authService.getToken();
-    if (this.token) {
-      this.loadTimetables();
-    } else {
-      this.authService.logout();
-    }
+    // this.token = this.authService.getToken();
+    // if (this.token) {
+    //   this.loadTimetables();
+    // } else {
+    //   this.authService.logout();
+    // }
+
+    this.loadTimetables();
   }
 
   loadTimetables(): void {
-    if (this.token) {
-      this.isLoading = true;
-      this.timetableService.fetchTimetables(this.token).subscribe(
-        (timetables) => {
-          this.timetables = timetables;
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error loading horarios:', error);
-          this.isLoading = false;
-        }
-      );
-    }
+    // if (this.token) {
+    //   this.isLoading = true;
+    //   this.timetableService.fetchTimetables(this.token).subscribe(
+    //     (timetables) => {
+    //       this.timetables = timetables;
+    //       this.isLoading = false;
+    //     },
+    //     (error) => {
+    //       console.error('Error loading horarios:', error);
+    //       this.isLoading = false;
+    //     }
+    //   );
+    // }
+
+    this.isLoading = true;
+    this.timetableService.fetchTimetables().then(
+      (timetables) => {
+        this.timetables = timetables;
+        this.isLoading = false;
+      }
+    ).catch((error) => {
+      this.isLoading = false;
+      if (error.error.message === 'Unauthorized') {
+        this.authService.logout();
+      }
+    });
   }
 
   toggleCreateForm(action: string = 'Crear'): void {
@@ -65,15 +80,23 @@ export class TimetableComponent implements OnInit {
   async handleSubmit() {
     this.isSubmitting = true;
     try {
-      if (this.token) {
-        if (this.modalTitle === 'Crear Horario') {
-          await this.timetableService.saveTimetable(this.formData, this.token); // Create new horario
-        } else {
-          /* await this.timetableService.updateTimetable(this.formData, this.token); // Update existing horario */
-        }
-        this.toggleCreateForm(); // Close form modal
-        this.loadTimetables(); // Refresh list
+      // if (this.token) {
+      //   if (this.modalTitle === 'Crear Horario') {
+      //     await this.timetableService.saveTimetable(this.formData, this.token); // Create new horario
+      //   } else {
+      //     /* await this.timetableService.updateTimetable(this.formData, this.token); // Update existing horario */
+      //   }
+      //   this.toggleCreateForm(); // Close form modal
+      //   this.loadTimetables(); // Refresh list
+      // }
+
+      if (this.modalTitle === 'Crear Horario') {
+        await this.timetableService.saveTimetable(this.formData); // Create new horario
+      } else {
+        /* await this.timetableService.updateTimetable(this.formData, this.token); // Update existing horario */
       }
+      this.toggleCreateForm(); // Close form modal
+      this.loadTimetables(); // Refresh
     } catch (error) {
       console.error('Error creating/updating horario:', error);
     } finally {
@@ -88,14 +111,25 @@ export class TimetableComponent implements OnInit {
 
   confirmDelete(): void {
     this.isDeleting = true;
-    if (this.token && this.selectedHorarioId) {
-      this.timetableService.deleteTimetable(this.selectedHorarioId, this.token).then(() => {
+    // if (this.token && this.selectedHorarioId) {
+    //   this.timetableService.deleteTimetable(this.selectedHorarioId, this.token).then(() => {
+    //     this.cancelDelete();
+    //     this.isDeleting = false;
+    //     this.loadTimetables();
+    //   }).catch((error) => {
+    //     console.error('Error deleting horario:', error);
+    //     this.isDeleting = false
+    //   });
+    // }
+
+    if (this.selectedHorarioId) {
+      this.timetableService.deleteTimetable(this.selectedHorarioId).then(() => {
         this.cancelDelete();
         this.isDeleting = false;
         this.loadTimetables();
       }).catch((error) => {
         console.error('Error deleting horario:', error);
-        this.isDeleting = false
+        this.isDeleting = false;
       });
     }
   }

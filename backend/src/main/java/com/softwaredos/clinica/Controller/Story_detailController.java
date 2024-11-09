@@ -1,9 +1,8 @@
 package com.softwaredos.clinica.Controller;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import com.softwaredos.clinica.config.ApiExternal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,14 @@ import com.softwaredos.clinica.Request.DetailRequest;
 import com.softwaredos.clinica.config.Auth;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class Story_detailController {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    private RestTemplate restTemplate;
     @Autowired
     private Story_detailRepository story_detailRepository;
     @Autowired
@@ -45,7 +47,22 @@ public class Story_detailController {
                     .doctor(auth.persona())
                     .paciente(person)
                     .build();
-            return story_detailRepository.save(story_detail);
+
+            Story_detail story_detail_saved = story_detailRepository.save(story_detail);
+
+            try {
+                //Datos para enviar en el POST
+                Map<String, String> postData = new HashMap<>();
+                postData.put("id", story_detail_saved.getId()); // Suponiendo
+                postData.put("title", story_detail_saved.getTitle());
+                postData.put("notes", story_detail_saved.getNotes());
+
+                restTemplate.postForObject(ApiExternal.urlStoreTreatment, postData, String.class);
+            } catch (Exception e) {
+                LOGGER.info("error: ", e);
+            }
+            // return story_detailRepository.save(story_detail);
+            return story_detail_saved;
         } catch (Exception e) {
             LOGGER.info("error: ", e);
             return null;

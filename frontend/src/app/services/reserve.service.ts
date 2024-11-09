@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Reserve } from '../interfaces/reserve.interface';
 import { GraphQLClient, gql } from 'graphql-request';
+import { GraphQLService } from '../config/graphql.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -12,10 +14,10 @@ import { GraphQLClient, gql } from 'graphql-request';
 export class ReserveService {
   private endpoint = 'http://143.198.138.115:8080/graphql';
 
-  constructor(private http: HttpClient) { }
+  constructor(private graphqlService: GraphQLService) { }
 
-  fetchReserves(token: string): Observable<Reserve[]> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  async fetchReserves(): Promise<Reserve[]> {
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const query = `
       query GetReservacion {
           getReservacion {
@@ -62,7 +64,7 @@ export class ReserveService {
           }
       }
     `;
-    return this.http
+    /* return this.http
       .post<any>(this.endpoint, { query }, { headers })
       .pipe(
         map(response => response.data.getReservacion.map((item: any) => ({
@@ -107,6 +109,10 @@ export class ReserveService {
             }
           }
         })))
-      );
+      ); */
+
+    // Realiza la solicitud
+    const response = await this.graphqlService.request<{ getReservacion: Reserve[] }>(query);
+    return response.getReservacion;
   }
 }

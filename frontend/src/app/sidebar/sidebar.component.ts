@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,12 +25,22 @@ import { Router } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Input() user: Person | null = null;
-  constructor(private authService: AuthService, private router: Router) {}
+  userRole: string | null = null;  // Variable para almacenar el rol del usuario
+  constructor(private authService: AuthService, private router: Router) { }
+
+  ngOnInit(): void {
+    // Obtiene el rol del usuario al iniciar el componente
+    this.userRole = this.authService.getRole();
+  }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  hasRole(role: string): boolean {
+    return this.userRole === role;
   }
 }

@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Timetable } from '../interfaces/timetable.interface';
-import { GraphQLClient, gql } from 'graphql-request';
+import { gql } from 'graphql-request';
+import { GraphQLService } from '../config/graphql.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimetableService {
-  private endpoint = 'http://143.198.138.115:8080/graphql';
+  // private endpoint = 'http://143.198.138.115:8080/graphql';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private graphqlService: GraphQLService,
+  ) { }
 
-  fetchTimetables(token: string): Observable<Timetable[]> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  async fetchTimetables(): Promise<Timetable[]> {
     const query = `
       query MiHorario {
           miHorario {
@@ -44,7 +44,7 @@ export class TimetableService {
           }
       }
     `;
-    return this.http
+    /* return this.http
       .post<any>(this.endpoint, { query }, { headers })
       .pipe(
         map(response => response.data.miHorario.data.map((item: any) => ({
@@ -68,12 +68,16 @@ export class TimetableService {
             }
           }
         })))
-      );
+      ); */
+
+      // Realiza la solicitud
+      const response = await this.graphqlService.request<{ miHorario: { data: Timetable[] } }>(query);
+      return response.miHorario.data;
   }
 
-  private getClient(): GraphQLClient {
-    return new GraphQLClient(this.endpoint);
-  }
+  // private getClient(): GraphQLClient {
+  //   return new GraphQLClient(this.endpoint);
+  // }
 
   formatDate(dateString: string): string {
     const [year, month, day] = dateString.split('-');
@@ -81,12 +85,12 @@ export class TimetableService {
   }
 
 
-  async saveTimetable(timetable: Partial<Timetable>, token: string): Promise<void> {
-    console.log('Saving timetable:', timetable);
-    console.log('Token:', token);
+  async saveTimetable(timetable: Partial<Timetable>): Promise<void> {
+    // console.log('Saving timetable:', timetable);
+    // console.log('Token:', token);
 
-    const client = this.getClient();
-    client.setHeader('Authorization', `Bearer ${token}`);
+    // const client = this.getClient();
+    // client.setHeader('Authorization', `Bearer ${token}`);
 
     // Format the date to DD-MM-YYYY
     const formattedDate = this.formatDate(timetable.date || '');
@@ -122,16 +126,19 @@ export class TimetableService {
       }
     `;
 
-    try {
-      const response = await client.request(mutation);
-      console.log('Timetable created/updated successfully:', response);
-    } catch (error) {
-      console.error('Error creating/updating timetable:', error);
-    }
+    // try {
+    //   const response = await client.request(mutation);
+    //   console.log('Timetable created/updated successfully:', response);
+    // } catch (error) {
+    //   console.error('Error creating/updating timetable:', error);
+    // }
+
+    // Realiza la solicitud
+    await this.graphqlService.request<{ storeHorario: string }>(mutation);
   }
 
 
-  async deleteTimetable(id: string, token: string): Promise<void> {
+  async deleteTimetable(id: string): Promise<void> {
     /* const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const mutation = `
       mutation DeleteHorario {
@@ -140,17 +147,19 @@ export class TimetableService {
     `;
 
     return this.http.post(this.endpoint, { mutation }, { headers }); */
-    const client = this.getClient();
-    client.setHeader('Authorization', `Bearer ${token}`);
+    // const client = this.getClient();
+    // client.setHeader('Authorization', `Bearer ${token}`);
     const mutation = gql`
       mutation DeleteHorario {
         deleteHorario(id: "${id}")
       }
     `;
-    try {
-      return client.request(mutation);
-    } catch (error) {
-      console.error('Error deleting timetable:', error);
-    }
+    // try {
+    //   return client.request(mutation);
+    // } catch (error) {
+    //   console.error('Error deleting timetable:', error);
+    // }
+    // Realiza la solicitud
+    await this.graphqlService.request<{ deleteHorario: string }>(mutation);
   }
 }

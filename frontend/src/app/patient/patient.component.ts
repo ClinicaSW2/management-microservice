@@ -3,7 +3,6 @@ import { Person } from '../interfaces/login-response.interface';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PatientDetail } from '../interfaces/patient-detail.interface';
 import { PatientService } from '../services/patient.service';
-import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,42 +17,61 @@ import { Router } from '@angular/router';
 export class PatientComponent implements OnInit {
   patient: Person | null = null;
   patientDetails: PatientDetail[] = [];
-  token: string | null = null;
+  // token: string | null = null;
   isLoading = false;
+  isCreating = false;
   showForm = false;
   modalTitle: string = 'Crear Detalle de Paciente';
   formData: Partial<PatientDetail> = {};
+  deleteConfirmationMessage = '¿Estás seguro de que deseas eliminar este detalle de paciente?';
+  detailFix: string = '';
+  modalVisibility = false;
+  isDeleting = false;
 
   constructor(
     private router: Router,
     private patientService: PatientService,
-    private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.patient = JSON.parse(localStorage.getItem('patient') || '{}');
-    this.token = this.authService.getToken();
-    if (this.token) {
-      console.log('Patient:', this.patient);
-      this.loadPatientDetails();
-      if (!this.patient) {
-        this.router.navigate(['/doctor']);
-      }
-    } else {
-      this.authService.logout();
-    }
+    // this.token = this.authService.getToken();
+    // if (this.token) {
+    //   console.log('Patient:', this.patient);
+    //   this.loadPatientDetails();
+    //   if (!this.patient) {
+    //     this.router.navigate(['/doctor']);
+    //   }
+    // } else {
+    //   this.authService.logout();
+    // }
+
+    this.loadPatientDetails();
   }
 
   async loadPatientDetails(): Promise<void> {
-    if (this.token && this.patient?.id) {
+    // if (this.token && this.patient?.id) {
+    //   this.isLoading = true;
+    //   try {
+    //     this.patientDetails = await this.patientService.fetchPatientDetails(this.patient.id);
+    //   } catch (error) {
+    //     console.error('Error loading patient details:', error);
+    //   } finally {
+    //     this.isLoading = false;
+    //   }
+    // }
+
+    if (this.patient?.id) {
       this.isLoading = true;
       try {
-        this.patientDetails = await this.patientService.fetchPatientDetails(this.token, this.patient.id);
+        this.patientDetails = await this.patientService.fetchPatientDetails(this.patient.id);
       } catch (error) {
         console.error('Error loading patient details:', error);
       } finally {
         this.isLoading = false;
       }
+    } else {
+      this.router.navigate(['/reserve']);
     }
   }
 
@@ -63,11 +81,33 @@ export class PatientComponent implements OnInit {
     if (action === 'Crear') this.formData = {}; // Clear form for new patient detail
   }
 
+  handleVerTratamiento(detail: PatientDetail): void {
+    console.log("🚀 ~ PatientComponent ~ handleVerTratamiento ~ detail:", detail)
+    localStorage.setItem('patient-detail', JSON.stringify(detail));
+    this.router.navigate(['/treatment']);
+  }
+
   async handleSubmit() {
-    this.isLoading = true;
+    // this.isLoading = true;
+    // try {
+    //   if (this.token && this.patient?.id) {
+    //     await this.patientService.savePatientDetail(this.token, this.formData, this.patient.id);
+    //     this.toggleCreateForm();
+    //     await this.loadPatientDetails();
+    //   } else {
+    //     this.router.navigate(['/reserve']);
+    //   }
+    // } catch (error) {
+    //   console.error('Error saving patient detail:', error);
+    // } finally {
+    //   this.isLoading = false;
+    // }
+
     try {
-      if (this.token && this.patient?.id) {
-        await this.patientService.savePatientDetail(this.token, this.formData, this.patient.id);
+      if (this.patient?.id) {
+        this.isCreating = true;
+        await this.patientService.savePatientDetail(this.formData, this.patient.id);
+        this.isCreating = false;
         this.toggleCreateForm();
         await this.loadPatientDetails();
       } else {
@@ -76,7 +116,41 @@ export class PatientComponent implements OnInit {
     } catch (error) {
       console.error('Error saving patient detail:', error);
     } finally {
-      this.isLoading = false;
+      // this.isLoading = false;
     }
+  }
+
+  toggleTreatment() {
+    this.router.navigate(['/treatment']);
+  }
+
+  handleEliminarDetallePaciente(id: string): void {
+    this.detailFix = id;
+    this.modalVisibility = true;
+  }
+
+  async confirmDelete(): Promise<void> {
+    this.isDeleting = true;
+    try {
+      await this.patientService.deletePatientDetail(this.detailFix).then(
+        () => {
+          this.patientDetails = this.patientDetails.filter((detail) => detail.id !== this.detailFix);
+          this.isDeleting = false;
+          this.modalVisibility = false;
+        },
+        (error) => {
+          console.error('Error deleting patient detail:', error);
+          this.isDeleting = false;
+          this.modalVisibility = false;
+        }
+      );
+    } catch (error) {
+      console.error('Error deleting patient detail:', error);
+      this.isDeleting = false;
+    }
+  }
+
+  cancelDelete(): void {
+    this.modalVisibility = false;
   }
 }

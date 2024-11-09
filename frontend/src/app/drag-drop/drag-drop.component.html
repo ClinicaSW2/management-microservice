@@ -1,5 +1,5 @@
 <div class="drag-drop-container" (dragover)="handleDragOver($event)" (drop)="handleDrop($event)">
-  <h1>Upload an Image for Prediction</h1>
+  <h1>Sistema de Predicción de Enfermedades</h1>
 
   <!-- Loading spinner -->
   <div *ngIf="isLoading" class="loading-container">
@@ -12,7 +12,7 @@
       <img [src]="selectedImage" alt="Selected" class="preview-image" />
     </ng-container>
     <ng-template #placeholder>
-      <p>Drag and drop an image here, or click to select</p>
+      <p>Arrastra y suelta una imagen aquí o haz clic para seleccionar una.</p>
     </ng-template>
     <input type="file" accept="image/*" (change)="handleFileChange($event)" />
   </div>
