@@ -58,6 +58,8 @@ public class Story_detailController {
                 postData.put("notes", story_detail_saved.getNotes());
                 postData.put("pacient_id", story_detail_saved.getPaciente().getId());
 
+                System.out.println("pacient_id: " + story_detail_saved.getPaciente().getId());
+
                 restTemplate.postForObject(ApiExternal.urlStoreTreatment, postData, String.class);
             } catch (Exception e) {
                 LOGGER.info("error: ", e);
