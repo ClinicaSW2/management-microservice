@@ -56,6 +56,7 @@ public class Story_detailController {
                 postData.put("id", story_detail_saved.getId()); // Suponiendo
                 postData.put("title", story_detail_saved.getTitle());
                 postData.put("notes", story_detail_saved.getNotes());
+                postData.put("pacient_id", story_detail_saved.getPaciente().getId());
 
                 restTemplate.postForObject(ApiExternal.urlStoreTreatment, postData, String.class);
             } catch (Exception e) {

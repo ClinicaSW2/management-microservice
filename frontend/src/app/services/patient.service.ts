@@ -129,12 +129,6 @@ export class PatientService {
   // }
 
   async savePatientDetail(patientDetail: Partial<PatientDetail>, patientId: string): Promise<void> {
-    // console.log("🚀 ~ savePatientDetail ~ patientDetail:", patientDetail);
-    // console.log('Token:', token);
-
-    // const client = this.getClient();
-    // client.setHeader('Authorization', `Bearer ${token}`);
-
     const mutation = gql`
       mutation Store_StoryDetail {
         store_StoryDetail(
@@ -152,12 +146,6 @@ export class PatientService {
         }
       }
     `;
-    // try {
-    //   const response = await client.request(mutation);
-    //   console.log("🚀 ~ PatientService ~ savePatientDetail ~ response:", response);
-    // } catch (error) {
-    //   console.error('Error saving patient detail:', error);
-    // }
 
     // Realiza la solicitud
     await this.graphqlService.request<{ store_StoryDetail: PatientDetail }>(mutation);

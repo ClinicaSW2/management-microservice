@@ -8,8 +8,8 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root'
 })
 export class GraphQLService {
-  // private readonly endpoint = 'http://143.198.138.115:8080/graphql';
   private readonly endpoint = 'http://143.198.138.115:8080/graphql';
+  // private readonly endpoint = 'http://localhost:8080/graphql';
   private client: GraphQLClient;
   private authService?: AuthService;  // Agregar una propiedad para AuthService
 

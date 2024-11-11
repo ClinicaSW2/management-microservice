@@ -27,9 +27,9 @@ export class PatientComponent implements OnInit {
   detailFix: string = '';
   modalVisibility = false;
   isDeleting = false;
-  recognition: any;
-  isListening = false;
-  isListeningTitle = false;
+  // recognition: any;
+  // isListening = false;
+  // isListeningTitle = false;
 
   constructor(
     private router: Router,
@@ -40,67 +40,67 @@ export class PatientComponent implements OnInit {
   ngOnInit(): void {
     this.patient = JSON.parse(localStorage.getItem('patient') || '{}');
     this.loadPatientDetails();
-    this.setupSpeechRecognition();
+    // this.setupSpeechRecognition();
   }
 
-  setupSpeechRecognition() {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  // setupSpeechRecognition() {
+  //   const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-    if (SpeechRecognition) {
-      console.log("SpeechRecognition API found");
-      this.recognition = new SpeechRecognition();
-      this.recognition.lang = 'es-ES';
-      this.recognition.interimResults = false;
-      this.recognition.maxAlternatives = 1;
+  //   if (SpeechRecognition) {
+  //     console.log("SpeechRecognition API found");
+  //     this.recognition = new SpeechRecognition();
+  //     this.recognition.lang = 'es-ES';
+  //     this.recognition.interimResults = false;
+  //     this.recognition.maxAlternatives = 1;
 
-      this.recognition.onstart = () => {
-        console.log("Speech recognition started");
-        this.ngZone.run(() => this.isListening = true);
-      };
+  //     this.recognition.onstart = () => {
+  //       console.log("Speech recognition started");
+  //       this.ngZone.run(() => this.isListening = true);
+  //     };
 
-      this.recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        console.log("Transcript received:", transcript);
-        this.ngZone.run(() => {
-          if (this.isListeningTitle) {
-            this.formData.title = (this.formData.title || '') + ' ' + transcript;
-          } else {
-            this.formData.notes = (this.formData.notes || '') + ' ' + transcript;
-          }
-        });
-      };
+  //     this.recognition.onresult = (event: any) => {
+  //       const transcript = event.results[0][0].transcript;
+  //       console.log("Transcript received:", transcript);
+  //       this.ngZone.run(() => {
+  //         if (this.isListeningTitle) {
+  //           this.formData.title = (this.formData.title || '') + ' ' + transcript;
+  //         } else {
+  //           this.formData.notes = (this.formData.notes || '') + ' ' + transcript;
+  //         }
+  //       });
+  //     };
 
-      this.recognition.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
-        this.ngZone.run(() => this.isListening = false);
-      };
+  //     this.recognition.onerror = (event: any) => {
+  //       console.error("Speech recognition error:", event.error);
+  //       this.ngZone.run(() => this.isListening = false);
+  //     };
 
-      this.recognition.onend = () => {
-        console.log("Speech recognition ended");
-        this.ngZone.run(() => this.isListening = false);
-      };
-    } else {
-      console.warn("Speech recognition API is not supported in this browser");
-    }
-  }
+  //     this.recognition.onend = () => {
+  //       console.log("Speech recognition ended");
+  //       this.ngZone.run(() => this.isListening = false);
+  //     };
+  //   } else {
+  //     console.warn("Speech recognition API is not supported in this browser");
+  //   }
+  // }
 
-  startListening(field: 'title' | 'notes') {
-    if (this.recognition) {
-      console.log("Starting speech recognition for:", field);
-      this.isListeningTitle = field === 'title';
-      this.recognition.start();
-    } else {
-      console.warn("Speech recognition is not initialized");
-    }
-  }
+  // startListening(field: 'title' | 'notes') {
+  //   if (this.recognition) {
+  //     console.log("Starting speech recognition for:", field);
+  //     this.isListeningTitle = field === 'title';
+  //     this.recognition.start();
+  //   } else {
+  //     console.warn("Speech recognition is not initialized");
+  //   }
+  // }
 
-  stopListening() {
-    if (this.recognition) {
-      console.log("Stopping speech recognition");
-      this.recognition.stop();
-      this.isListening = false;
-    }
-  }
+  // stopListening() {
+  //   if (this.recognition) {
+  //     console.log("Stopping speech recognition");
+  //     this.recognition.stop();
+  //     this.isListening = false;
+  //   }
+  // }
 
   async loadPatientDetails(): Promise<void> {
     if (this.patient?.id) {

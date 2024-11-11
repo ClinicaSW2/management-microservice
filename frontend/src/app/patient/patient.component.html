@@ -104,10 +104,10 @@
           <label for="title">Título</label>
           <div class="input-group">
             <input type="text" class="form-control" id="title" name="title" [(ngModel)]="formData.title" required />
-            <button type="button" class="btn btn-secondary"
+            <!-- <button type="button" class="btn btn-secondary"
               (click)="isListening ? stopListening() : startListening('title')">
               <mat-icon>{{ isListening && isListeningTitle ? 'mic_off' : 'mic' }}</mat-icon>
-            </button>
+            </button> -->
           </div>
         </div>
 
@@ -116,10 +116,10 @@
           <label for="notes">Notas</label>
           <div class="input-group">
             <textarea class="form-control" id="notes" name="notes" [(ngModel)]="formData.notes" required></textarea>
-            <button type="button" class="btn btn-secondary"
+            <!-- <button type="button" class="btn btn-secondary"
               (click)="isListening ? stopListening() : startListening('notes')">
               <mat-icon>{{ isListening && !isListeningTitle ? 'mic_off' : 'mic' }}</mat-icon>
-            </button>
+            </button> -->
           </div>
         </div>
 

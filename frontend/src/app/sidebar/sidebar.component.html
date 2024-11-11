@@ -1,6 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav mode="side" opened class="sidenav">
     <h2 class="welcome">Bienvenido, {{ user?.name }} {{ user?.lastName }}</h2>
+    <h3>{{ user?.user?.role }}</h3>
     <mat-divider></mat-divider>
     <mat-nav-list>
       <a *ngIf="hasRole('ADMIN') || hasRole('DOCTOR')" mat-list-item routerLink="/home" routerLinkActive="active-link">
