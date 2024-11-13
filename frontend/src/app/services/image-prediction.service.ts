@@ -7,7 +7,8 @@ import { Observable, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class ImagePredictionService {
-  private endpoint = `http://146.190.175.183:5000`;
+  // private endpoint = `http://146.190.175.183:5000`;
+  private endpoint = `http://34.122.25.173:5000`;
 
   constructor(private http: HttpClient) {}
 
