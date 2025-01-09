@@ -8,7 +8,7 @@ import { Treatment } from '../interfaces/treatment.interface';
   providedIn: 'root'
 })
 export class TreatmentService {
-  private endpoint = `http://143.198.138.115:4000/api`
+  private endpoint = `http://146.190.52.218:4000/api`
 
   constructor(private http: HttpClient) {}
 

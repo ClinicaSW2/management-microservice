@@ -12,7 +12,7 @@ import { GraphQLService } from '../config/graphql.service';
   providedIn: 'root',
 })
 export class ReserveService {
-  private endpoint = 'http://143.198.138.115:8080/graphql';
+  private endpoint = 'http://146.190.52.218:8080/graphql';
 
   constructor(private graphqlService: GraphQLService) { }
 

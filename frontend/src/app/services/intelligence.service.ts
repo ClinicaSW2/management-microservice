@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 export class IntelligenceService {
   // private baseUrl = 'http://143.198.138.115:5000'; // Replace with actual base URL
   // private baseUrl = 'http://143.198.138.115:5000';
-  private baseUrl = 'http://13.58.77.19:5000';
+  private baseUrl = 'http://18.215.254.111:5000';
 
   constructor(private http: HttpClient) {}
 
